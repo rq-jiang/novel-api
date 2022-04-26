@@ -1,12 +1,20 @@
 package com.example.demo.service;
 
-import com.example.demo.mapper.BookMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.example.demo.entity.Book;
+import com.example.demo.entity.Chapter;
 
-@Service
-public class BookService {
-    @Autowired
-    private BookMapper bookMapper;
+import java.util.List;
+
+public interface BookService {
+
+    List<Book> findAll();
+    List<Book> findByType(Integer id);
+    List<Book> findByAuthor(Integer id);
+    List<Book> findByName(String name);
+    List<Book> findBybookName(String name);
+    Book findById(Integer id);
+    boolean insertBook(Book book);
+    boolean updateBook(Book book);
+    boolean deleteBook(Integer id);
 
 }

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.BookMapper">
+    <resultMap id="book" type="com.example.demo.entity.Book">
+        <result column="id" property="id" jdbcType="INTEGER"></result>
+        <result column="name" property="name" jdbcType="VARCHAR"></result>
+        <result column="introduction" property="introduction" jdbcType="VARCHAR"></result>
+        <result column="created_at" property="created_at" jdbcType="TIME"></result>
+        <result column="updated_at" property="updated_at" jdbcType="TIME"></result>
+        <result column="is_end" property="is_end" jdbcType="INTEGER"></result>
+        <result column="cover_url" property="cover_url" jdbcType="VARCHAR"></result>
+        <result column="word_count" property="word_count" jdbcType="INTEGER"></result>
+        <result column="type_id" property="type_id" jdbcType="INTEGER"></result>
+        <result column="author_id" property="author_id" jdbcType="INTEGER"></result>
+        <result column="status" property="status" jdbcType="INTEGER"></result>
+        <association property="type">
+            <id column="t_id" property="id"></id>
+            <result column="t_name" property="name" jdbcType="VARCHAR"></result>
+            <result column="t_created_at" property="created_at" jdbcType="TIME"></result>
+            <result column="t_updated_at" property="updated_at" jdbcType="TIME"></result>
+            <result column="t_status" property="status" jdbcType="INTEGER"></result>
+        </association>
+        <association property="author">
+            <id column="a_id" property="id"></id>
+            <result column="a_name" property="name" jdbcType="VARCHAR"></result>
+            <result column="a_introduction" property="introduction" jdbcType="VARCHAR"></result>
+            <result column="a_created_at" property="created_at" jdbcType="TIME"></result>
+            <result column="a_updated_at" property="updated_at" jdbcType="TIME"></result>
+            <result column="a_cover_url" property="cover_url" jdbcType="VARCHAR"></result>
+            <result column="a_status" property="status" jdbcType="INTEGER"></result>
+        </association>
+    </resultMap>
+
+    <select id="findAll" resultMap="book">
+        select a.id as a_id,a.name as a_name,b.id,b.name,b.introduction,b.is_end,b.cover_url,b.word_count,b.type_id,b.author_id,t.id as t_id,t.name as t_name from author a,book b,type t where a.id = b.author_id and t.id = b.type_id
+    </select>
+    <select id="findByType" resultMap="book">
+        select a.id as a_id,a.name as a_name,b.id,b.name,b.introduction,b.is_end,b.cover_url,b.word_count,b.type_id,b.author_id,t.id as t_id,t.name as t_name from author a,book b,type t where b.type_id = #{id} and t.id = #{id} and b.author_id = a.id
+    </select>
+    <select id="findByAuthor" resultMap="book">
+        select a.id as a_id,a.name as a_name,a.cover_url as a_cover_url,a.introduction as a_introduction,b.id,b.name,b.introduction,b.is_end,b.cover_url,b.word_count,b.type_id,b.author_id,t.id as t_id,t.name as t_name from author a,book b,type t where a.id = #{id} and a.id = b.author_id and t.id = b.type_id
+    </select>
+    <select id="findById" resultMap="book">
+        select a.id as a_id,a.name as a_name,b.id,b.name,b.introduction,b.is_end,b.cover_url,b.word_count,b.type_id,b.author_id,t.id as t_id,t.name as t_name from author a,book b,type t where b.id = #{id} and a.id = b.author_id and t.id = b.type_id
+    </select>
+    <select id="findByName" resultMap="book">
+        select a.id as a_id,a.name as a_name,b.id,b.name,b.introduction,b.is_end,b.cover_url,b.word_count,b.type_id,b.author_id,t.id as t_id,t.name as t_name from author a,book b,type t where b.name like "%" #{name} "%" and a.id = b.author_id and t.id = b.type_id
+    </select>
+
+    <select id="findBybookName" resultType="com.example.demo.entity.Book">
+        select id,name from book where name = #{name}
+    </select>
+
+    <insert id="insertBook" parameterType="com.example.demo.entity.Book">
+        insert into book (name,introduction,created_at,updated_at,word_count,author_id,type_id,cover_url) values (#{name},#{introduction},#{created_at},#{updated_at},#{word_count},#{author_id},#{type_id},#{cover_url})
+    </insert>
+
+    <update id="updateBook" parameterType="com.example.demo.entity.Book">
+        update book set name = #{name},cover_url = #{cover_url},introduction = #{introduction},updated_at = #{updated_at},word_count = #{word_count},author_id = #{author_id},type_id = #{type_id} where id = #{id}
+    </update>
+
+    <delete id="deleteBook">
+        delete from book where id = #{id}
+    </delete>
+</mapper>

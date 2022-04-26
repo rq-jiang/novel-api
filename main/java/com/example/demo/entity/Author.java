@@ -13,7 +13,8 @@ public class Author implements Serializable {
     private Integer id;
     private String name;
     private String introduction;
-    private Integer bookId;
-    private Date createdAt;
-    private Date updateAt;
+    private Date created_at;
+    private Date updated_at;
+    private String cover_url;
+    private Integer status;
 }

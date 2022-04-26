@@ -1,23 +1,25 @@
 package com.example.demo.entity;
 
+
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Accessors(chain = true)
-public class Chapter implements Serializable {
+public class User implements Serializable {
     private Integer id;
-    private String name;
-    private Integer volume_id;
+    private String nick_name;
+    private String password;
+    private String email;
     private Integer book_id;
-    private String content;
-    private Integer word_count;
+    private String cover_url;
+    private int is_vip;
     private Date created_at;
     private Date updated_at;
-    private Integer order_num;
     private Integer status;
-    private Book book;
+    private List<Book> bookList;
 }

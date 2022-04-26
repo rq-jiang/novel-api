@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.ChapterMapper">
+    <resultMap id="chapter" type="com.example.demo.entity.Chapter">
+        <result column="id" property="id" jdbcType="INTEGER"></result>
+        <result column="name" property="name" jdbcType="VARCHAR"></result>
+        <result column="volume_id" property="volume_id" jdbcType="INTEGER"></result>
+        <result column="book_id" property="book_id" jdbcType="INTEGER"></result>
+        <result column="content" property="content" jdbcType="VARCHAR"></result>
+        <result column="word_count" property="word_count" jdbcType="INTEGER"></result>
+        <result column="created_at" property="created_at" jdbcType="TIMESTAMP"></result>
+        <result column="updated_at" property="updated_at" jdbcType="TIMESTAMP"></result>
+        <result column="order_num" property="order_num" jdbcType="INTEGER"></result>
+        <result column="status" property="status" jdbcType="INTEGER"></result>
+        <association property="book">
+            <id column="b_id" property="id" jdbcType="INTEGER"></id>
+            <result column="b_name" property="name" jdbcType="VARCHAR"></result>
+            <result column="introduction" property="introduction" jdbcType="VARCHAR"></result>
+            <result column="created_at" property="created_at" jdbcType="TIME"></result>
+            <result column="updated_at" property="updated_at" jdbcType="TIME"></result>
+            <result column="is_end" property="is_end" jdbcType="INTEGER"></result>
+            <result column="cover_url" property="cover_url" jdbcType="VARCHAR"></result>
+            <result column="word_count" property="word_count" jdbcType="INTEGER"></result>
+            <result column="type_id" property="type_id" jdbcType="INTEGER"></result>
+            <result column="author_id" property="author_id" jdbcType="INTEGER"></result>
+            <result column="status" property="status" jdbcType="INTEGER"></result>
+        </association>
+    </resultMap>
+
+    <select id="findByBookId" resultMap="chapter">
+        select c.id,c.name,c.content,c.book_id,c.updated_at,b.id as b_id,b.name as b_name from chapter c,book b where c.book_id = #{id} and c.book_id = b.id
+    </select>
+
+    <select id="findByListBookId" resultType="com.example.demo.entity.Chapter">
+        select * from chapter where book_id = #{id} order by id desc
+    </select>
+
+    <select id="findById" resultType="com.example.demo.entity.Chapter">
+        select * from chapter where id = #{id} and book_id = #{book_id}
+    </select>
+
+    <insert id="insertChapter" parameterType="com.example.demo.entity.Chapter">
+        insert into chapter(name,volume_id,book_id,content,word_count,created_at,updated_at) values (#{name},#{volume_id},#{book_id},#{content},#{word_count},#{created_at},#{updated_at})
+    </insert>
+</mapper>

@@ -11,7 +11,8 @@ import java.util.Date;
 public class Volume implements Serializable {
     private Integer id;
     private String name;
-    private Integer bookId;
-    private Date createdAt;
-    private Date updatedAt;
+    private Integer book_id;
+    private Date created_at;
+    private Date updated_at;
+    private Integer status;
 }

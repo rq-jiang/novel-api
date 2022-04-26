@@ -12,6 +12,7 @@ import java.util.Date;
 public class Type implements Serializable {
     private Integer id;
     private String name;
-    private Date createdAt;
-    private Date updatedAt;
+    private Date created_at;
+    private Date updated_at;
+    private Integer status;
 }
