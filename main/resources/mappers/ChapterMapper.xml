@@ -44,4 +44,8 @@
     <insert id="insertChapter" parameterType="com.example.demo.entity.Chapter">
         insert into chapter(name,volume_id,book_id,content,word_count,created_at,updated_at) values (#{name},#{volume_id},#{book_id},#{content},#{word_count},#{created_at},#{updated_at})
     </insert>
+
+    <select id="findByListLittle" resultType="com.example.demo.entity.Chapter">
+        select * from chapter where book_id = #{id} order by id limit 0,5
+    </select>
 </mapper>

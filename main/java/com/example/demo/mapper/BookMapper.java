@@ -14,6 +14,7 @@ public interface BookMapper {
     List<Book> findByAuthor(Integer id);
     List<Book> findByName(String name);
     List<Book> findBybookName(String name);
+    List<Book> findByUser(Integer id);
     Book findById(Integer id);
     boolean insertBook(Book book);
     boolean updateBook(Book book);

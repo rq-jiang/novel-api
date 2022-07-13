@@ -1,6 +1,10 @@
 package com.example.demo.service;
 
+import com.example.demo.entity.LoginDTO;
+import com.example.demo.entity.Result;
 import com.example.demo.entity.User;
+
+import java.util.List;
 
 public interface UserService {
 
@@ -8,7 +12,14 @@ public interface UserService {
 
     User findById(Integer id);
 
-    User findByNickNameandPassWord(String email);
+    List<User> findAll();
 
-    boolean updateUser(User user);
+    Result deleteUser(Integer id);
+
+
+    Result login(LoginDTO loginDTO);
+
+    User findByEmail(String email);
+
+    Result updateUser(String newPassword,Integer id);
 }

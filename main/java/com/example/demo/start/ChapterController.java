@@ -1,10 +1,12 @@
 package com.example.demo.start;
 
 import com.example.demo.entity.Chapter;
+import com.example.demo.entity.Result;
 import com.example.demo.service.ChapterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +16,7 @@ import java.util.Map;
 @RequestMapping("/chapter")
 public class ChapterController {
 
-    @Autowired
+    @Resource
     private ChapterService chapterService;
 
     @RequestMapping("/list")
@@ -27,13 +29,18 @@ public class ChapterController {
         return chapterService.findByListBookId(id);
     }
 
+    @RequestMapping("/listLittle")
+    public List<Chapter> findByListLittleBookId(Integer id) {
+        return chapterService.findByListLittle(id);
+    }
+
     @RequestMapping("/findById")
     public Chapter findById(Integer id,Integer book_id){
         return chapterService.findById(id,book_id);
     }
 
     @RequestMapping("/uploadChapter")
-    public boolean uploadChapter(@RequestBody Map<String,Object> map){
+    public Result uploadChapter(@RequestBody Map<String,Object> map){
         System.out.println("名字为"+map.get("name")+"内容"+map.get("content"));
         String name = (String) map.get("name");
         String content = (String)map.get("content");
@@ -46,7 +53,8 @@ public class ChapterController {
         chapter.setUpdated_at(new Date());
         chapter.setBook_id(book_id);
         chapter.setVolume_id(1);
-        return chapterService.insertChapter(chapter);
+        chapterService.insertChapter(chapter);
+        return new Result(200,"成功更新章节","");
     }
 
 }

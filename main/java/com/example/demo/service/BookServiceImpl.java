@@ -42,6 +42,11 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
+    public List<Book> findByUser(Integer id) {
+        return bookMapper.findByUser(id);
+    }
+
+    @Override
     public Book findById(Integer id) {
         return bookMapper.findById(id);
     }
@@ -63,4 +68,6 @@ public class BookServiceImpl implements BookService{
     public boolean deleteBook(Integer id) {
         return bookMapper.deleteBook(id);
     }
+
+
 }

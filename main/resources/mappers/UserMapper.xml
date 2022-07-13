@@ -29,9 +29,25 @@
     </resultMap>
 
     <insert id="insertUser" parameterType="com.example.demo.entity.User">
-        insert into user(nick_name,email,password,cover_url,created_at) values (#{nick_name},cover_url,#{password},#{email},#{created_at})
+        insert into user(nick_name,email,password,cover_url,created_at) values (#{nick_name},#{email},#{password},#{cover_url},#{created_at})
     </insert>
-    <select id="findByNickNameandPassWord" resultType="com.example.demo.entity.User">
+    <select id="findByemail" resultType="com.example.demo.entity.User">
         select * from user where email = #{email}
     </select>
+
+    <select id="findAll" resultType="com.example.demo.entity.User">
+        select id,nick_name,created_at,is_vip from user
+    </select>
+
+    <select id="findById" resultType="com.example.demo.entity.User">
+        select * from user where id = #{id}
+    </select>
+
+    <delete id="deleteUser">
+        delete from user where id = #{id}
+    </delete>
+
+    <update id="updateUser" parameterType="com.example.demo.entity.User">
+        update user set password = #{password} where id = #{id}
+    </update>
 </mapper>

@@ -7,8 +7,8 @@
         <result column="id" property="id" jdbcType="INTEGER"></result>
         <result column="name" property="name" jdbcType="VARCHAR"></result>
         <result column="introduction" property="introduction" jdbcType="VARCHAR"></result>
-        <result column="created_at" property="created_at" jdbcType="TIME"></result>
-        <result column="updated_at" property="updated_at" jdbcType="TIME"></result>
+        <result column="created_at" property="created_at" jdbcType="DATE"></result>
+        <result column="updated_at" property="updated_at" jdbcType="DATE"></result>
         <result column="is_end" property="is_end" jdbcType="INTEGER"></result>
         <result column="cover_url" property="cover_url" jdbcType="VARCHAR"></result>
         <result column="word_count" property="word_count" jdbcType="INTEGER"></result>
@@ -34,7 +34,7 @@
     </resultMap>
 
     <select id="findAll" resultMap="book">
-        select a.id as a_id,a.name as a_name,b.id,b.name,b.introduction,b.is_end,b.cover_url,b.word_count,b.type_id,b.author_id,t.id as t_id,t.name as t_name from author a,book b,type t where a.id = b.author_id and t.id = b.type_id
+        select a.id as a_id,a.name as a_name,b.*,t.id as t_id,t.name as t_name from author a,book b,type t where a.id = b.author_id and t.id = b.type_id
     </select>
     <select id="findByType" resultMap="book">
         select a.id as a_id,a.name as a_name,b.id,b.name,b.introduction,b.is_end,b.cover_url,b.word_count,b.type_id,b.author_id,t.id as t_id,t.name as t_name from author a,book b,type t where b.type_id = #{id} and t.id = #{id} and b.author_id = a.id
@@ -42,11 +42,14 @@
     <select id="findByAuthor" resultMap="book">
         select a.id as a_id,a.name as a_name,a.cover_url as a_cover_url,a.introduction as a_introduction,b.id,b.name,b.introduction,b.is_end,b.cover_url,b.word_count,b.type_id,b.author_id,t.id as t_id,t.name as t_name from author a,book b,type t where a.id = #{id} and a.id = b.author_id and t.id = b.type_id
     </select>
+    <select id="findByUser" resultMap="book">
+        select a.id as a_id,a.name as a_name,a.cover_url as a_cover_url,a.introduction as a_introduction,b.id,b.name,b.introduction,b.is_end,b.cover_url,b.word_count,b.type_id,b.author_id,t.id as t_id,t.name as t_name from author a,book b,type t,book_user u where u.user_id = #{user_id} and u.book_id = b.id and a.id = b.author_id and t.id = b.type_id
+    </select>
     <select id="findById" resultMap="book">
         select a.id as a_id,a.name as a_name,b.id,b.name,b.introduction,b.is_end,b.cover_url,b.word_count,b.type_id,b.author_id,t.id as t_id,t.name as t_name from author a,book b,type t where b.id = #{id} and a.id = b.author_id and t.id = b.type_id
     </select>
     <select id="findByName" resultMap="book">
-        select a.id as a_id,a.name as a_name,b.id,b.name,b.introduction,b.is_end,b.cover_url,b.word_count,b.type_id,b.author_id,t.id as t_id,t.name as t_name from author a,book b,type t where b.name like "%" #{name} "%" and a.id = b.author_id and t.id = b.type_id
+        select b.id,b.name,b.introduction,b.is_end,b.cover_url,b.word_count,b.type_id,b.author_id,a.id as a_id,a.name as a_name,t.id as t_id,t.name as t_name from book b,author a,type t where b.name like "%" #{name} "%" and a.id = b.author_id or a.name like "%" #{name} "%" and a.id = b.author_id and t.id = b.type_id
     </select>
 
     <select id="findBybookName" resultType="com.example.demo.entity.Book">

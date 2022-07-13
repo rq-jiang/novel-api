@@ -13,4 +13,6 @@ public interface ChapterService {
 
     boolean insertChapter(Chapter chapter);
 
+    List<Chapter> findByListLittle(Integer id);
+
 }

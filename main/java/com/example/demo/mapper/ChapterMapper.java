@@ -13,6 +13,8 @@ public interface ChapterMapper {
 
     List<Chapter> findByListBookId(Integer id);
 
+    List<Chapter> findByListLittle(Integer id);
+
     Chapter findById(@Param("id") Integer id, @Param("book_id") Integer book_id);
 
     boolean insertChapter(Chapter chapter);

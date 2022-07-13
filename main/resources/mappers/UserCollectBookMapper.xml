@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.UsercollectBookMapper">
+<!--    <resultMap id="userCollectBook" type="com.example.demo.entity.UsercollectBook">-->
+<!--        <result column="id" property="id" jdbcType="INTEGER"></result>-->
+<!--        <result column="book_id" property="book_id" jdbcType="INTEGER"></result>-->
+<!--        <result column="user_id" property="user_id" jdbcType="INTEGER"></result>-->
+
+<!--        <association property="book">-->
+<!--            <id column="b_id" property="id" jdbcType="INTEGER"></id>-->
+<!--            <result column="name" property="name" jdbcType="VARCHAR"></result>-->
+<!--            <result column="introduction" property="introduction" jdbcType="VARCHAR"></result>-->
+<!--            <result column="created_at" property="created_at" jdbcType="TIME"></result>-->
+<!--            <result column="updated_at" property="updated_at" jdbcType="TIME"></result>-->
+<!--            <result column="is_end" property="is_end" jdbcType="INTEGER"></result>-->
+<!--            <result column="cover_url" property="cover_url" jdbcType="VARCHAR"></result>-->
+<!--            <result column="word_count" property="word_count" jdbcType="INTEGER"></result>-->
+<!--            <result column="type_id" property="type_id" jdbcType="INTEGER"></result>-->
+<!--            <result column="author_id" property="author_id" jdbcType="INTEGER"></result>-->
+<!--            <result column="status" property="status" jdbcType="INTEGER"></result>-->
+<!--        </association>-->
+<!--        <association property="type">-->
+<!--            <id column="t_id" property="id"></id>-->
+<!--            <result column="t_name" property="name" jdbcType="VARCHAR"></result>-->
+<!--            <result column="t_created_at" property="created_at" jdbcType="TIME"></result>-->
+<!--            <result column="t_updated_at" property="updated_at" jdbcType="TIME"></result>-->
+<!--            <result column="t_status" property="status" jdbcType="INTEGER"></result>-->
+<!--        </association>-->
+<!--        <association property="author">-->
+<!--            <id column="a_id" property="id"></id>-->
+<!--            <result column="a_name" property="name" jdbcType="VARCHAR"></result>-->
+<!--            <result column="a_introduction" property="introduction" jdbcType="VARCHAR"></result>-->
+<!--            <result column="a_created_at" property="created_at" jdbcType="TIME"></result>-->
+<!--            <result column="a_updated_at" property="updated_at" jdbcType="TIME"></result>-->
+<!--            <result column="a_cover_url" property="cover_url" jdbcType="VARCHAR"></result>-->
+<!--            <result column="a_status" property="status" jdbcType="INTEGER"></result>-->
+<!--        </association>-->
+
+<!--    </resultMap>-->
+    <resultMap id="book" type="com.example.demo.entity.Book">
+        <result column="id" property="id" jdbcType="INTEGER"></result>
+        <result column="name" property="name" jdbcType="VARCHAR"></result>
+        <result column="introduction" property="introduction" jdbcType="VARCHAR"></result>
+        <result column="created_at" property="created_at" jdbcType="TIME"></result>
+        <result column="updated_at" property="updated_at" jdbcType="TIME"></result>
+        <result column="is_end" property="is_end" jdbcType="INTEGER"></result>
+        <result column="cover_url" property="cover_url" jdbcType="VARCHAR"></result>
+        <result column="word_count" property="word_count" jdbcType="INTEGER"></result>
+        <result column="type_id" property="type_id" jdbcType="INTEGER"></result>
+        <result column="author_id" property="author_id" jdbcType="INTEGER"></result>
+        <result column="status" property="status" jdbcType="INTEGER"></result>
+        <association property="type">
+            <id column="t_id" property="id"></id>
+            <result column="t_name" property="name" jdbcType="VARCHAR"></result>
+            <result column="t_created_at" property="created_at" jdbcType="TIME"></result>
+            <result column="t_updated_at" property="updated_at" jdbcType="TIME"></result>
+            <result column="t_status" property="status" jdbcType="INTEGER"></result>
+        </association>
+        <association property="author">
+            <id column="a_id" property="id"></id>
+            <result column="a_name" property="name" jdbcType="VARCHAR"></result>
+            <result column="a_introduction" property="introduction" jdbcType="VARCHAR"></result>
+            <result column="a_created_at" property="created_at" jdbcType="TIME"></result>
+            <result column="a_updated_at" property="updated_at" jdbcType="TIME"></result>
+            <result column="a_cover_url" property="cover_url" jdbcType="VARCHAR"></result>
+            <result column="a_status" property="status" jdbcType="INTEGER"></result>
+        </association>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.example.demo.entity.UsercollectBook">
+        insert into book_user(book_id,user_id) values (#{book_id},#{user_id})
+    </insert>
+
+    <delete id="delete" parameterType="com.example.demo.entity.UsercollectBook">
+        delete from book_user where book_id = #{book_id} and user_id = #{user_id}
+    </delete>
+
+    <select id="findByUserId" resultMap="book">
+        select a.id as a_id,a.name as a_name,b.id,b.name,b.introduction,b.is_end,b.cover_url,b.word_count,b.type_id,b.author_id,t.id as t_id,t.name as t_name from author a,book b,type t,book_user u where u.user_id = #{user_id} and u.book_id = b.id
+
+    </select>
+
+    <select id="findByUserAndBookId" resultType="com.example.demo.entity.UsercollectBook">
+        select book_id from book_user where user_id  = #{user_id} and book_id = #{book_id}
+    </select>
+</mapper>

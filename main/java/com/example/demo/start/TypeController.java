@@ -1,5 +1,6 @@
 package com.example.demo.start;
 
+import com.example.demo.entity.Result;
 import com.example.demo.entity.Type;
 import com.example.demo.service.TypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +17,7 @@ import java.util.List;
 @RequestMapping("/type")
 public class TypeController {
 
-    @Autowired
+    @Resource
     private TypeService typeService;
 
     @RequestMapping("/findAll")
@@ -29,13 +31,21 @@ public class TypeController {
     }
 
     @RequestMapping("/insertType")
-    public boolean insertType(String type_name) {
-//        Type type = typeService.findByName(type_name);
+    public Result insertType(String type_name) {
+        Type type1 = typeService.findByName(type_name);
+        if(type1 != null) {
+            return new Result(400,"已有该类型","");
+        }
         Type type = new Type();
         type.setName(type_name);
         type.setCreated_at(new Date());
         type.setUpdated_at(new Date());
-        return typeService.insertType(type);
-
+        typeService.insertType(type);
+        return new Result(200,"新增成功","");
+    }
+    @RequestMapping("/findByName")
+    public Type findByName(String name) {
+        System.out.println("获取到的"+name);
+        return typeService.findByName(name);
     }
 }

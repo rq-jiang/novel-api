@@ -1,16 +1,8 @@
 package com.example.demo.start;
 
-import com.example.demo.entity.Author;
-import com.example.demo.entity.Book;
-import com.example.demo.entity.Type;
-import com.example.demo.service.AuthorService;
-import com.example.demo.service.BookService;
-import com.example.demo.service.TypeService;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.demo.entity.*;
+import com.example.demo.service.*;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -25,10 +17,6 @@ import java.util.List;
 @RequestMapping("/book")
 public class BookController {
 
-    @Value("${fileDirectory}")
-    private String fileDirectory;
-
-    private String cover_url = "http://localhost:8888/images/book_cover/";
 
     @Resource
     private BookService bookService;
@@ -39,6 +27,16 @@ public class BookController {
 
     @Resource
     private TypeService typeService;
+
+    @Resource
+    private UserService userService;
+
+    @Resource
+    private UserCollectBookService userCollectBookService;
+
+//    private String book_cover = "/usr/tomcat/apache-tomcat-9.0.62/webapps/ROOT/images/book_cover/";
+
+    private String book_cover = "/Users/rqjiang/Projects/Java/novel-api/src/main/resources/static/images/book_cover/";
 
     @RequestMapping("/list")
     public List<Book> listbook(){
@@ -60,6 +58,7 @@ public class BookController {
         if(name == ""){
             return null;
         }
+        System.out.println(bookService.findByName(name));
         return bookService.findByName(name);
     }
 
@@ -69,16 +68,16 @@ public class BookController {
     }
 
     @RequestMapping("/insertBook")
-    public boolean insertBook(String book_name, String introduction, Integer word_count, String author_name , String type_name){
+    public Result insertBook(String book_name, String introduction, Integer word_count, String author_name , String type_name){
         Author author = authorService.findByName(author_name);
         if(author == null) {
             System.out.println("没有该作者");
-            return false;
+            return new Result(400,"没有该作者的信息，请先注册作者","");
         }
         Type type = typeService.findByName(type_name);
         if(type == null) {
             System.out.println("没有该类型");
-            return false;
+            return new Result(400,"没有找到该类型，请先添加类型","");
         }
        if(isBookSame(book_name)){
            Book book = new Book();
@@ -89,12 +88,12 @@ public class BookController {
            book.setWord_count(word_count);
            book.setUpdated_at(new Date());
            book.setCreated_at(new Date());
-           book.setCover_url(cover_url);
-           cover_url = "http://localhost:8888/images/book_cover/";
-           System.out.println(book);
-           return bookService.insertBook(book);
+           book.setCover_url(book_cover);
+           book_cover = "/Users/rqjiang/Projects/Java/novel-api/src/main/resources/static/images/book_cover/";
+           bookService.insertBook(book);
+           return new Result(200,"上传成功","");
        }
-        return false;
+        return new Result(400,"上传失败","");
     }
 
     public boolean isBookSame(String bookName){
@@ -115,12 +114,12 @@ public class BookController {
             //获取文件名
             String fileName=file.getOriginalFilename();
             //拼接完整的文件保存路径
-            String fileFullPath=fileDirectory+"book_cover/"+fileName;
+            String fileFullPath=book_cover+fileName;
             //删除现有的同名文件（如果有）。如果直接调用delete方法，会抛异常
             Files.deleteIfExists(Paths.get(fileFullPath));
             //保存文件
             file.transferTo(new File(fileFullPath));
-            cover_url += fileName;
+            book_cover = "http://localhost:8080/images/book_cover/"+fileName;
         } catch (Exception ex){
             System.out.println(ex.getMessage());
             return ex.getMessage();
@@ -145,7 +144,39 @@ public class BookController {
     }
 
     @RequestMapping("/deleteBook")
-    public boolean deleteBook(Integer id) {
-        return bookService.deleteBook(id);
+    public Result deleteBook(Integer id) {
+        if(id != null){
+            bookService.deleteBook(id);
+            return new Result(200,"删除成功","");
+        }
+        return new Result(400,"删除失败","");
+    }
+
+    @RequestMapping("/collect")
+    public Result collectBook(@RequestParam Integer user_id, Integer book_id) {
+        Book book = bookService.findById(book_id);
+        User user = userService.findById(user_id);
+        System.out.println("book"+book);
+        System.out.println("userColl"+userCollectBookService.findByUserAndBookId(book_id,user_id));
+        if(book != null && user != null && userCollectBookService.findByUserAndBookId(user_id,book_id) == null) {
+            userCollectBookService.insert(book_id,user_id);
+            return new Result(200,"收藏成功","");
+        }
+        return new Result(400,"收藏失败","");
+    }
+    @RequestMapping("/unCollect")
+    public Result unCollectBook(@RequestParam Integer user_id, Integer book_id) {
+        Book book = bookService.findById(book_id);
+        User user = userService.findById(user_id);
+        if(book != null && user != null && userCollectBookService.findByUserAndBookId(user_id,book_id) != null) {
+            userCollectBookService.delete(book_id,user_id);
+            return new Result(200,"取消成功","");
+        }
+        return new Result(400,"取消失败","");
+    }
+
+    @RequestMapping("/findByUserId")
+    public List<Book> findByUserId(Integer user_id){
+        return bookService.findByUser(user_id);
     }
 }

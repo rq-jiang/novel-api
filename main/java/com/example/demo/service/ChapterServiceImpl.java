@@ -34,4 +34,9 @@ public class ChapterServiceImpl implements ChapterService{
     public boolean insertChapter(Chapter chapter) {
         return chapterMapper.insertChapter(chapter);
     }
+
+    @Override
+    public List<Chapter> findByListLittle(Integer id) {
+        return chapterMapper.findByListLittle(id);
+    }
 }
